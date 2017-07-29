@@ -258,6 +258,10 @@ WDAPI.Driver.prototype.close = function() {
     return this.ref + "->close()";
 };
 
+WDAPI.Driver.prototype.currentScreenshot = function(filename) { /* utility */
+    return "file_put_contents('" + filename + "', "+ this.ref + "->currentScreenshot())";
+};
+
 WDAPI.Driver.prototype.findElement = function(locatorType, locator) {
     //return new WDAPI.Element(this.ref + "->findElement(" + WDAPI.Driver.searchContext(locatorType, locator) + ")");
     return new WDAPI.Element(WDAPI.Driver.searchContext(locatorType, locator));
@@ -361,6 +365,11 @@ WDAPI.Utils = function() {
 //////////////////////////////////////////////////////////////////////
 // overwrite webdriver.js
 //////////////////////////////////////////////////////////////////////
+
+SeleniumWebDriverAdaptor.prototype.captureEntirePageScreenshot = function(filename, kwargs) { /* utility */
+  var driver = new WDAPI.Driver();
+  return driver.currentScreenshot(this.rawArgs[0]);
+};
 
 SeleniumWebDriverAdaptor.prototype.isTextPresent = function() {
     var target = this.rawArgs[0];
