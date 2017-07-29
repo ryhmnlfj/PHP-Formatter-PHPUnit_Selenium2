@@ -41,10 +41,7 @@ Equals.prototype.toString = function() {
 };
 
 Equals.prototype.assert = function() {
-    statement = '';
-    statement += "$result = " + this.e2.toString() + ";\n";
-    statement += "$this->assertEquals(" + this.e1.toString() +", $result);";
-    return statement;
+    return "$this->assertEquals(" + this.e1.toString() + ", " + this.e2.toString() + ");";
 };
 
 Equals.prototype.verify = function() {
