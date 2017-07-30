@@ -245,7 +245,7 @@ WDAPI.Driver.searchContext = function(locatorType, locator) {
     case 'name':
 	return '$this->byName(' + locatorString + ')';
     case 'tag_name':
-	return '$this->by("tag name", ' + locatorString + ')';
+	return '$this->byTag(' + locatorString + ')';
     }
     throw 'Error: unknown strategy [' + locatorType + '] for locator [' + locator + ']';
 };
