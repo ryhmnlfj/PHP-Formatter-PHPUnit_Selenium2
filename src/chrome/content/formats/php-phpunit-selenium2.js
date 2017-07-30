@@ -312,6 +312,11 @@ WDAPI.Element.prototype.click = function() {
     return this.ref + "->click()";
 };
 
+WDAPI.Element.prototype.doubleClick = function() { /* utility */
+    return "$this->moveto(" + this.ref + ");\n"
+         + "$this->doubleclick()";
+};
+
 WDAPI.Element.prototype.getAttribute = function(attributeName) {
     return this.ref + "->attribute(" + xlateArgument(attributeName) + ")";
 };
@@ -369,6 +374,12 @@ WDAPI.Utils = function() {
 SeleniumWebDriverAdaptor.prototype.captureEntirePageScreenshot = function(filename, kwargs) { /* utility */
   var driver = new WDAPI.Driver();
   return driver.currentScreenshot(this.rawArgs[0]);
+};
+
+SeleniumWebDriverAdaptor.prototype.doubleClick = function(elementLocator) { /* utility */
+  var locator = this._elementLocator(this.rawArgs[0]);
+  var driver = new WDAPI.Driver();
+  return driver.findElement(locator.type, locator.string).doubleClick();
 };
 
 SeleniumWebDriverAdaptor.prototype.isTextPresent = function() {
