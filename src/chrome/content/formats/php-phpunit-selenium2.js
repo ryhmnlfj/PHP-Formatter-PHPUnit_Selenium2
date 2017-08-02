@@ -321,6 +321,22 @@ WDAPI.Element.prototype.getAttribute = function(attributeName) {
     return this.ref + "->attribute(" + xlateArgument(attributeName) + ")";
 };
 
+WDAPI.Element.prototype.getElementHeight = function() { /* rc */
+    return this.ref + "->size()['height']";
+};
+
+WDAPI.Element.prototype.getElementPositionLeft = function() { /* rc */
+    return this.ref + "->location()['x']";
+};
+
+WDAPI.Element.prototype.getElementPositionTop = function() { /* rc */
+    return this.ref + "->location()['y']";
+};
+
+WDAPI.Element.prototype.getElementWidth = function() { /* rc */
+    return this.ref + "->size()['width']";
+};
+
 WDAPI.Element.prototype.getText = function() {
     return this.ref + "->text()";
 };
@@ -380,6 +396,30 @@ SeleniumWebDriverAdaptor.prototype.doubleClick = function(elementLocator) { /* u
   var locator = this._elementLocator(this.rawArgs[0]);
   var driver = new WDAPI.Driver();
   return driver.findElement(locator.type, locator.string).doubleClick();
+};
+
+SeleniumWebDriverAdaptor.prototype.getElementHeight = function(elementLocator) { /* rc */
+  var locator = this._elementLocator(this.rawArgs[0]);
+  var driver = new WDAPI.Driver();
+  return driver.findElement(locator.type, locator.string).getElementHeight();
+};
+
+SeleniumWebDriverAdaptor.prototype.getElementPositionLeft = function(elementLocator) { /* rc */
+  var locator = this._elementLocator(this.rawArgs[0]);
+  var driver = new WDAPI.Driver();
+  return driver.findElement(locator.type, locator.string).getElementPositionLeft();
+};
+
+SeleniumWebDriverAdaptor.prototype.getElementPositionTop = function(elementLocator) { /* rc */
+  var locator = this._elementLocator(this.rawArgs[0]);
+  var driver = new WDAPI.Driver();
+  return driver.findElement(locator.type, locator.string).getElementPositionTop();
+};
+
+SeleniumWebDriverAdaptor.prototype.getElementWidth = function(elementLocator) { /* rc */
+  var locator = this._elementLocator(this.rawArgs[0]);
+  var driver = new WDAPI.Driver();
+  return driver.findElement(locator.type, locator.string).getElementWidth();
 };
 
 SeleniumWebDriverAdaptor.prototype.isTextPresent = function() {
