@@ -312,9 +312,45 @@ WDAPI.Element.prototype.click = function() {
     return this.ref + "->click()";
 };
 
+WDAPI.Element.prototype.clickAt = function(coordString) { /* utility */
+    return "$this->moveto(array(\n"
+         + indents(1) + "'element' => " + this.ref + ",\n"
+         + indents(1) + "'xoffset' => " + coordString.split(",")[0] + ",\n"
+         + indents(1) + "'yoffset' => " + coordString.split(",")[1] + ",\n"
+         + "));\n"
+         + "$this->click()";
+};
+
 WDAPI.Element.prototype.doubleClick = function() { /* utility */
     return "$this->moveto(" + this.ref + ");\n"
          + "$this->doubleclick()";
+};
+
+WDAPI.Element.prototype.doubleClickAt = function(coordString) { /* utility */
+    return "$this->moveto(array(\n"
+         + indents(1) + "'element' => " + this.ref + ",\n"
+         + indents(1) + "'xoffset' => " + coordString.split(",")[0] + ",\n"
+         + indents(1) + "'yoffset' => " + coordString.split(",")[1] + ",\n"
+         + "));\n"
+         + "$this->doubleclick()";
+};
+
+WDAPI.Element.prototype.dragAndDrop = function(movementsString) { /* utility */
+    return "$this->moveto(" + this.ref + ");\n"
+         + "$this->buttondown();\n"
+         + "$this->moveto(array(\n"
+         + indents(1) + "'element' => " + this.ref + ",\n"
+         + indents(1) + "'xoffset' => " + this.ref + "->size()['width'] / 2 " + movementsString.split(",")[0] + ",\n"
+         + indents(1) + "'yoffset' => " + this.ref + "->size()['height'] / 2 " + movementsString.split(",")[1] + ",\n"
+         + "));\n"
+         + "$this->buttonup()";
+};
+
+WDAPI.Element.prototype.dragAndDropToObject = function(locatorOfDragDestinationObject) { /* utility */
+    return "$this->moveto(" + this.ref + ");\n"
+         + "$this->buttondown();\n"
+         + "$this->moveto(" + WDAPI.Driver.searchContext(locatorOfDragDestinationObject.type, locatorOfDragDestinationObject.string) + ");\n"
+         + "$this->buttonup()";
 };
 
 WDAPI.Element.prototype.getAttribute = function(attributeName) {
@@ -347,6 +383,46 @@ WDAPI.Element.prototype.isDisplayed = function() {
 
 WDAPI.Element.prototype.isSelected = function() {
     return this.ref + "->selected()";
+};
+
+WDAPI.Element.prototype.mouseDown = function() { /* utility */
+    return "$this->moveto(" + this.ref + ");\n"
+         + "$this->buttondown()";
+};
+
+WDAPI.Element.prototype.mouseDownAt = function(coordString) { /* utility */
+    return "$this->moveto(array(\n"
+         + indents(1) + "'element' => " + this.ref + ",\n"
+         + indents(1) + "'xoffset' => " + coordString.split(",")[0] + ",\n"
+         + indents(1) + "'yoffset' => " + coordString.split(",")[1] + ",\n"
+         + "));\n"
+         + "$this->buttondown()";
+};
+
+WDAPI.Element.prototype.mouseMove = function() { /* utility */
+    return "$this->moveto(" + this.ref + ")";
+};
+
+WDAPI.Element.prototype.mouseMoveAt = function(coordString) { /* utility */
+    return "$this->moveto(array(\n"
+         + indents(1) + "'element' => " + this.ref + ",\n"
+         + indents(1) + "'xoffset' => " + coordString.split(",")[0] + ",\n"
+         + indents(1) + "'yoffset' => " + coordString.split(",")[1] + ",\n"
+         + "))";
+};
+
+WDAPI.Element.prototype.mouseUp = function() { /* utility */
+    return "$this->moveto(" + this.ref + ");\n"
+         + "$this->buttonup()";
+};
+
+WDAPI.Element.prototype.mouseUpAt = function(coordString) { /* utility */
+    return "$this->moveto(array(\n"
+         + indents(1) + "'element' => " + this.ref + ",\n"
+         + indents(1) + "'xoffset' => " + coordString.split(",")[0] + ",\n"
+         + indents(1) + "'yoffset' => " + coordString.split(",")[1] + ",\n"
+         + "));\n"
+         + "$this->buttonup()";
 };
 
 WDAPI.Element.prototype.sendKeys = function(text) {
@@ -392,10 +468,35 @@ SeleniumWebDriverAdaptor.prototype.captureEntirePageScreenshot = function(filena
   return driver.currentScreenshot(this.rawArgs[0]);
 };
 
+SeleniumWebDriverAdaptor.prototype.clickAt = function(elementLocator, coordString) { /* utility */
+  var locator = this._elementLocator(this.rawArgs[0]);
+  var driver = new WDAPI.Driver();
+  return driver.findElement(locator.type, locator.string).clickAt(this.rawArgs[1]);
+};
+
 SeleniumWebDriverAdaptor.prototype.doubleClick = function(elementLocator) { /* utility */
   var locator = this._elementLocator(this.rawArgs[0]);
   var driver = new WDAPI.Driver();
   return driver.findElement(locator.type, locator.string).doubleClick();
+};
+
+SeleniumWebDriverAdaptor.prototype.doubleClickAt = function(elementLocator, coordString) { /* utility */
+  var locator = this._elementLocator(this.rawArgs[0]);
+  var driver = new WDAPI.Driver();
+  return driver.findElement(locator.type, locator.string).doubleClickAt(this.rawArgs[1]);
+};
+
+SeleniumWebDriverAdaptor.prototype.dragAndDrop = function(elementLocator, movementsString) { /* utility */
+  var locator = this._elementLocator(this.rawArgs[0]);
+  var driver = new WDAPI.Driver();
+  return driver.findElement(locator.type, locator.string).dragAndDrop(this.rawArgs[1]);
+};
+
+SeleniumWebDriverAdaptor.prototype.dragAndDropToObject = function(locatorOfObjectToBeDragged, locatorOfDragDestinationObject) { /* utility */
+  var locator = this._elementLocator(this.rawArgs[0]);
+  var locator_dest = this._elementLocator(this.rawArgs[1]);
+  var driver = new WDAPI.Driver();
+  return driver.findElement(locator.type, locator.string).dragAndDropToObject(locator_dest);
 };
 
 SeleniumWebDriverAdaptor.prototype.getElementHeight = function(elementLocator) { /* rc */
@@ -421,6 +522,43 @@ SeleniumWebDriverAdaptor.prototype.getElementWidth = function(elementLocator) { 
   var driver = new WDAPI.Driver();
   return driver.findElement(locator.type, locator.string).getElementWidth();
 };
+
+SeleniumWebDriverAdaptor.prototype.mouseDown = function(elementLocator) { /* utility */
+  var locator = this._elementLocator(this.rawArgs[0]);
+  var driver = new WDAPI.Driver();
+  return driver.findElement(locator.type, locator.string).mouseDown();
+};
+
+SeleniumWebDriverAdaptor.prototype.mouseDownAt = function(elementLocator, coordString) { /* utility */
+  var locator = this._elementLocator(this.rawArgs[0]);
+  var driver = new WDAPI.Driver();
+  return driver.findElement(locator.type, locator.string).mouseDownAt(this.rawArgs[1]);
+};
+
+SeleniumWebDriverAdaptor.prototype.mouseMove = function(elementLocator) { /* utility */
+  var locator = this._elementLocator(this.rawArgs[0]);
+  var driver = new WDAPI.Driver();
+  return driver.findElement(locator.type, locator.string).mouseMove();
+};
+
+SeleniumWebDriverAdaptor.prototype.mouseMoveAt = function(elementLocator, coordString) { /* utility */
+  var locator = this._elementLocator(this.rawArgs[0]);
+  var driver = new WDAPI.Driver();
+  return driver.findElement(locator.type, locator.string).mouseMoveAt(this.rawArgs[1]);
+};
+
+SeleniumWebDriverAdaptor.prototype.mouseUp = function(elementLocator) { /* utility */
+  var locator = this._elementLocator(this.rawArgs[0]);
+  var driver = new WDAPI.Driver();
+  return driver.findElement(locator.type, locator.string).mouseUp();
+};
+
+SeleniumWebDriverAdaptor.prototype.mouseUpAt = function(elementLocator, coordString) { /* utility */
+  var locator = this._elementLocator(this.rawArgs[0]);
+  var driver = new WDAPI.Driver();
+  return driver.findElement(locator.type, locator.string).mouseUpAt(this.rawArgs[1]);
+};
+
 
 SeleniumWebDriverAdaptor.prototype.isTextPresent = function() {
     var target = this.rawArgs[0];
